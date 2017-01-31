@@ -34,9 +34,25 @@ public class Player implements Comparable<Player>, Serializable {
   }
 
   @Override
+  public String toString() {
+    String fullName = getFirstName() + " " + getLastName();
+    return  String.format("%-24s %-10d %-6s",
+                                      fullName,
+                                      getHeightInInches(),
+                                      isPreviousExperience());
+  }
+
+  @Override
   public int compareTo(Player other) {
     // We always want to sort by last name then first name
-    return 0;
+    if (equals(other)) {
+      return 0;
+    }
+    if (lastName.equals(other.lastName)) {
+      return firstName.compareTo(other.firstName);
+    } else {
+        return lastName.compareTo(other.firstName);
+    }
   }
 
   @Override
