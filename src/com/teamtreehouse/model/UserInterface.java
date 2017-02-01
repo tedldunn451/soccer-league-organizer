@@ -26,14 +26,14 @@ public class UserInterface {
     mainMenu.put("2", "Add a player to a team");
     mainMenu.put("3", "Remove a player from a team");
     mainMenu.put("4", "View a report of players grouped by height");
-    mainMenu.put("5", "View a report showing players grouped by experience level");
+    mainMenu.put("5", "View a report of players grouped by experience level");
     mainMenu.put("6", "View a team roster");
     mainMenu.put("7", "Exit the program");
   }
 
   public String mainPrompt() throws IOException {
 
-    System.out.println("Your available options are listed below:\n");
+    System.out.println("\nYour available options are listed below:\n");
     for (Map.Entry<String, String> menuItem : mainMenu.entrySet()) {
       System.out.printf("\t%s) %s%n", menuItem.getKey(), menuItem.getValue());
     }
@@ -54,6 +54,7 @@ public class UserInterface {
             // create a new team
             displayTeamHeader();
             createTeamPrompt();
+            pauseProgram();
             break;
           case "2":
             // add a player to a team
@@ -88,6 +89,12 @@ public class UserInterface {
     } while (!selection.equals("7"));
   }
 
+  public void pauseProgram() throws IOException{
+
+    System.out.print("Press the <Enter> key to continue...");
+    reader.readLine();
+  }
+
   public void displayTeamHeader() {
 
     System.out.printf("%n%-20s %-20s %-8s%n%n", "Team Name", "Coach Name", "Players");
@@ -110,6 +117,10 @@ public class UserInterface {
 
     Team newTeam = new Team(newTeamName, coachName);
     league.add(newTeam);
+
+    System.out.printf("%nTeam: %s coached by %s successfully created and added to the league%n%n",
+            newTeam.getTeamName(), newTeam.getCoachName());
+
     return newTeam;
   }
 }
