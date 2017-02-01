@@ -3,6 +3,7 @@ package com.teamtreehouse.model;
 public class Players {
 
   public static Player[] load() {
+
     return new Player[] {
       new Player("Joe", "Smith", 42, true),
       new Player("Jill", "Tanner", 36, true),
