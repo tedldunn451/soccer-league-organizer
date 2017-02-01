@@ -15,13 +15,31 @@ public class Team implements Comparable{
   public static final int MAX_PLAYERS = 11;
 
   public Team(String teamName, String coachName) {
+
     this.teamName = teamName;
     this.coachName = coachName;
     this.teamRoster = new TreeSet<>();
     this.numberOfPlayers = 0;
   }
 
+  public int getNumberOfPlayers() {
+    return numberOfPlayers;
+  }
+
+  public String getTeamName() {
+    return teamName;
+  }
+
+  public String getCoachName() {
+    return coachName;
+  }
+
+  public Set<Player> getTeamRoster() {
+    return teamRoster;
+  }
+
   public void addPlayerToTeam(Player player) {
+
     if (this.numberOfPlayers < Team.MAX_PLAYERS) {
       this.teamRoster.add(player);
       this.numberOfPlayers++;
@@ -37,6 +55,7 @@ public class Team implements Comparable{
 
   @Override
   public String toString(){
+
     return  String.format("%-20s %-20s %-4d",
             teamName,
             coachName,
@@ -45,6 +64,7 @@ public class Team implements Comparable{
 
   @Override
   public int compareTo(Object obj) {
+
     Team other = (Team) obj;
     if (equals(other)) {
       return 0;
