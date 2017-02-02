@@ -1,7 +1,6 @@
 package com.teamtreehouse.model;
 
-import java.util.Set;
-import java.util.SortedSet;
+
 import java.util.TreeSet;
 
 /**
@@ -12,7 +11,7 @@ public class Team implements Comparable{
   private int numberOfPlayers;
   private String teamName;
   private String coachName;
-  private SortedSet<Player> teamRoster;
+  private TreeSet<Player> teamRoster;
   public static final int MAX_PLAYERS = 11;
 
   public Team(String teamName, String coachName) {
@@ -35,7 +34,7 @@ public class Team implements Comparable{
     return coachName;
   }
 
-  public SortedSet<Player> getTeamRoster() {
+  public TreeSet<Player> getTeamRoster() {
     return teamRoster;
   }
 
@@ -53,7 +52,14 @@ public class Team implements Comparable{
   }
 
   public void removePlayerFromTeam(Player player) {
-    teamRoster.remove(player);
+
+    if (this.getNumberOfPlayers() > 0) {
+      teamRoster.remove(player);
+      this.numberOfPlayers--;
+      System.out.printf("%n%s removed from Team: %s%n", player, this.teamName);
+    } else {
+        System.out.print("Error. Cannot remove player. There are no players currently assigned to this team.");
+    }
   }
 
   @Override

@@ -73,7 +73,10 @@ public class UserInterface {
             break;
           case "3":
             // remove a player from a team
-
+            displayTeamList();
+            Team thisTeam = getTeamPrompt();
+            displayPlayerList(thisTeam.getTeamRoster());
+            getPlayerPrompt();
             break;
           case "4":
             // view a height report
@@ -86,7 +89,9 @@ public class UserInterface {
           case "6":
             // view a team roster
             displayTeamList();
-
+            Team theTeam = getTeamPrompt();
+            displayPlayerList(theTeam.getTeamRoster());
+            pauseProgram();
             break;
           case "7":
             // exit the program
@@ -150,7 +155,7 @@ public class UserInterface {
 
   }
 
-  public void displayPlayerList(List<Player> players) {
+  public void displayPlayerList(Collection<Player> players) {
 
     System.out.printf("%n%-24s %-10s %-6s%n%n", "Player Name", "Height", "Experience");
     int count = 1;
