@@ -3,25 +3,24 @@ package com.teamtreehouse.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by Ted on 1/31/2017.
  */
 public class UserInterface {
 
-  private Set<Team> league;
+  private SortedSet<Team> league;
   private BufferedReader reader;
   private Map<String, String> mainMenu;
+  private Player[] players;
+  private Set<Player> alphaPlayers = new TreeSet<>();
 
   public UserInterface(){
 
     league = new TreeSet<>();
     reader = new BufferedReader(new InputStreamReader(System.in));
-    mainMenu = new HashMap<>();
+    mainMenu = new LinkedHashMap<>();
     mainMenu.put("1", "Create a new team");
     mainMenu.put("2", "Add a player to a team");
     mainMenu.put("3", "Remove a player from a team");
@@ -37,14 +36,19 @@ public class UserInterface {
     for (Map.Entry<String, String> menuItem : mainMenu.entrySet()) {
       System.out.printf("\t%s) %s%n", menuItem.getKey(), menuItem.getValue());
     }
-    System.out.print("\nPlease enter the number for your selection: ");
+    System.out.print("\nEnter the number for your selection: ");
     String selection = reader.readLine();
     return selection.trim();
   }
 
   public void run() {
 
+    players = Players.load();
+    players = alphabetizePlayers(players);
+
+
     String selection = "";
+    System.out.printf("There are currently %d registered players.%n", players.length);
     do {
       try {
         selection = mainPrompt();
@@ -52,13 +56,15 @@ public class UserInterface {
         switch(selection) {
           case "1":
             // create a new team
-            displayTeamHeader();
+            displayTeamList();
             createTeamPrompt();
             pauseProgram();
             break;
           case "2":
             // add a player to a team
-
+            displayPlayerList(players);
+            addPlayerPrompt();
+            pauseProgram();
             break;
           case "3":
             // remove a player from a team
@@ -89,30 +95,38 @@ public class UserInterface {
     } while (!selection.equals("7"));
   }
 
-  public void pauseProgram() throws IOException{
+  public Player[] alphabetizePlayers(Player[] players){
+    Collections.addAll(alphaPlayers, players);
+    players = alphaPlayers.toArray(new Player[alphaPlayers.size()]);
+    return players;
+  }
+
+  public void pauseProgram() throws IOException {
 
     System.out.print("Press the <Enter> key to continue...");
     reader.readLine();
   }
 
-  public void displayTeamHeader() {
+  public void displayTeamList() {
 
     System.out.printf("%n%-20s %-20s %-8s%n%n", "Team Name", "Coach Name", "Players");
     if (!league.isEmpty()) {
+      int count = 1;
       for (Team team : league) {
-        System.out.printf("%s%n",String.valueOf(team));
+        System.out.printf("%d) %s%n", count, String.valueOf(team));
+        count++;
       }
     } else {
       System.out.println("No teams currently in the league");
     }
   }
 
-  public Team createTeamPrompt() throws IOException {
+  public void createTeamPrompt() throws IOException {
 
-    System.out.print("\nPlease enter the new team name: ");
+    System.out.print("\nEnter the new team name: ");
     String newTeamName = reader.readLine();
 
-    System.out.print("Please enter the new team coach's name: ");
+    System.out.print("Enter the new team coach's name: ");
     String coachName = reader.readLine();
 
     Team newTeam = new Team(newTeamName, coachName);
@@ -121,6 +135,35 @@ public class UserInterface {
     System.out.printf("%nTeam: %s coached by %s successfully created and added to the league%n%n",
             newTeam.getTeamName(), newTeam.getCoachName());
 
-    return newTeam;
+  }
+
+  public void displayPlayerList(Player[] players) {
+
+    System.out.printf("%n%-24s %-10s %-6s%n%n", "Player Name", "Height", "Experience");
+    int count = 1;
+    for (Player player : players) {
+      if (player.isAvailable()) {
+        System.out.printf("%2d) %s%n", count, player);
+        count++;
+      }
+    }
+  }
+
+  public void addPlayerPrompt() throws IOException {
+
+    System.out.print("\nEnter the number for the player you would like to select: ");
+    int playerNumber = Integer.parseInt(reader.readLine());
+    Player selectedPlayer = players[playerNumber - 1];
+
+    displayTeamList();
+    Team[] teamArray = league.toArray(new Team[0]);
+
+    System.out.print("\nEnter the number for the team you would like to add the player to: ");
+    int teamNumber = Integer.parseInt(reader.readLine());
+    Team selectedTeam = teamArray[teamNumber - 1];
+
+    selectedTeam.addPlayerToTeam(selectedPlayer);
+
+    System.out.printf("%n%s added to Team: %s%n", selectedPlayer, selectedTeam);
   }
 }

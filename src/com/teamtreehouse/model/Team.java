@@ -1,6 +1,7 @@
 package com.teamtreehouse.model;
 
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -11,7 +12,7 @@ public class Team implements Comparable{
   private int numberOfPlayers;
   private String teamName;
   private String coachName;
-  private Set<Player> teamRoster;
+  private SortedSet<Player> teamRoster;
   public static final int MAX_PLAYERS = 11;
 
   public Team(String teamName, String coachName) {
@@ -34,15 +35,16 @@ public class Team implements Comparable{
     return coachName;
   }
 
-  public Set<Player> getTeamRoster() {
+  public SortedSet<Player> getTeamRoster() {
     return teamRoster;
   }
 
   public void addPlayerToTeam(Player player) {
 
-    if (this.numberOfPlayers < Team.MAX_PLAYERS) {
+    if (this.getNumberOfPlayers() < Team.MAX_PLAYERS) {
       this.teamRoster.add(player);
       this.numberOfPlayers++;
+      player.setAvailable(false);
     } else {
         System.out.print("Error. Cannot add player as this would exceed the " +
                           "maximum number of players allowed per team.");
@@ -71,4 +73,21 @@ public class Team implements Comparable{
     }
     return teamName.compareTo(other.teamName);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Team)) return false;
+
+    Team team = (Team) o;
+    return coachName.equals(team.coachName) && teamName.equals(team.teamName);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = teamName.hashCode();
+    result = 31 * result + coachName.hashCode();
+    return result;
+  }
+
 }
