@@ -15,6 +15,7 @@ public class UserInterface {
   private Map<String, String> mainMenu;
   private Player[] players;
   private Set<Player> alphaPlayers = new TreeSet<>();
+  private List<Player> alphaList;
 
   public UserInterface(){
 
@@ -44,11 +45,11 @@ public class UserInterface {
   public void run() {
 
     players = Players.load();
-    players = alphabetizePlayers(players);
-
+    alphaPlayers = alphabetizePlayers(players);
+    alphaList = new ArrayList<>(alphaPlayers);
 
     String selection = "";
-    System.out.printf("There are currently %d registered players.%n", players.length);
+    System.out.printf("There are currently %d registered players.%n", alphaList.size());
     do {
       try {
         selection = mainPrompt();
@@ -62,8 +63,12 @@ public class UserInterface {
             break;
           case "2":
             // add a player to a team
-            displayPlayerList(players);
-            addPlayerPrompt();
+            displayPlayerList(alphaList);
+            Player selectedPlayer = getPlayerPrompt();
+            displayTeamList();
+            Team selectedTeam = getTeamPrompt();
+            selectedTeam.addPlayerToTeam(selectedPlayer);
+            alphaList.remove(selectedPlayer);
             pauseProgram();
             break;
           case "3":
@@ -80,6 +85,7 @@ public class UserInterface {
             break;
           case "6":
             // view a team roster
+            displayTeamList();
 
             break;
           case "7":
@@ -95,10 +101,9 @@ public class UserInterface {
     } while (!selection.equals("7"));
   }
 
-  public Player[] alphabetizePlayers(Player[] players){
+  public Set<Player> alphabetizePlayers(Player[] players){
     Collections.addAll(alphaPlayers, players);
-    players = alphaPlayers.toArray(new Player[alphaPlayers.size()]);
-    return players;
+    return alphaPlayers;
   }
 
   public void pauseProgram() throws IOException {
@@ -121,6 +126,14 @@ public class UserInterface {
     }
   }
 
+  public Team getTeamPrompt() throws IOException{
+
+    System.out.print("\nEnter the number for the team you would like to select: ");
+    int teamNumber = Integer.parseInt(reader.readLine());
+    Team[] teamArray = league.toArray(new Team[0]);
+    return teamArray[teamNumber - 1];
+  }
+
   public void createTeamPrompt() throws IOException {
 
     System.out.print("\nEnter the new team name: ");
@@ -137,33 +150,20 @@ public class UserInterface {
 
   }
 
-  public void displayPlayerList(Player[] players) {
+  public void displayPlayerList(List<Player> players) {
 
     System.out.printf("%n%-24s %-10s %-6s%n%n", "Player Name", "Height", "Experience");
     int count = 1;
     for (Player player : players) {
-      if (player.isAvailable()) {
         System.out.printf("%2d) %s%n", count, player);
         count++;
-      }
     }
   }
 
-  public void addPlayerPrompt() throws IOException {
+  public Player getPlayerPrompt() throws IOException {
 
     System.out.print("\nEnter the number for the player you would like to select: ");
     int playerNumber = Integer.parseInt(reader.readLine());
-    Player selectedPlayer = players[playerNumber - 1];
-
-    displayTeamList();
-    Team[] teamArray = league.toArray(new Team[0]);
-
-    System.out.print("\nEnter the number for the team you would like to add the player to: ");
-    int teamNumber = Integer.parseInt(reader.readLine());
-    Team selectedTeam = teamArray[teamNumber - 1];
-
-    selectedTeam.addPlayerToTeam(selectedPlayer);
-
-    System.out.printf("%n%s added to Team: %s%n", selectedPlayer, selectedTeam);
+    return alphaList.get(playerNumber - 1);
   }
 }

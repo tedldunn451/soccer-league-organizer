@@ -44,7 +44,8 @@ public class Team implements Comparable{
     if (this.getNumberOfPlayers() < Team.MAX_PLAYERS) {
       this.teamRoster.add(player);
       this.numberOfPlayers++;
-      player.setAvailable(false);
+      System.out.printf("%n%s added to Team: %s%n", player, this.teamName);
+
     } else {
         System.out.print("Error. Cannot add player as this would exceed the " +
                           "maximum number of players allowed per team.");

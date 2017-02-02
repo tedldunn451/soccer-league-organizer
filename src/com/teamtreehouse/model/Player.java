@@ -9,7 +9,6 @@ public class Player implements Comparable<Player>, Serializable {
   private String lastName;
   private int heightInInches;
   private boolean previousExperience;
-  private boolean available;
 
   public Player(String firstName, String lastName, int heightInInches, boolean previousExperience) {
 
@@ -17,7 +16,6 @@ public class Player implements Comparable<Player>, Serializable {
     this.lastName = lastName;
     this.heightInInches = heightInInches;
     this.previousExperience = previousExperience;
-    this.available = true;
   }
 
   public String getFirstName() {
@@ -36,13 +34,6 @@ public class Player implements Comparable<Player>, Serializable {
     return previousExperience;
   }
 
-  public boolean isAvailable() {
-    return available;
-  }
-
-  public void setAvailable(boolean available) {
-    this.available = available;
-  }
 
   @Override
   public String toString() {
